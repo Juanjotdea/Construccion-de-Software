@@ -1,0 +1,29 @@
+import java.util.Scanner;
+
+
+public class DescuentoDeCompra {
+
+    
+    public static void main(String[] args) {
+    Scanner teclado = new Scanner (System.in);
+    
+    double compra;
+
+        System.out.println("Ingrese el monto de la compra:");
+        compra = teclado.nextDouble(); 
+   
+    int total = (int) compra;
+        total=teclado.nextDuble();
+        
+        if (compra > 10000 ){
+            compra = compra - (compra*0.2);
+        }
+        else if (compra > 5000){
+            compra = compra - (compra*0.1);
+        }
+        else if (compra < 5000){
+            compra = compra - (compra*0.0);
+        }
+        System.out.println("El monto a pagar despues de haber aplicado descuento es:"+compra);
+    }
+ }
