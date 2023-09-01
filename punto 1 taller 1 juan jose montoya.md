@@ -1,4 +1,6 @@
 # Construccion-de-Software
+import java.util.Scanner;
+
 public static void main(String[] argumentos) {
         float celsius;
         Scanner sc = new Scanner(System.in);
