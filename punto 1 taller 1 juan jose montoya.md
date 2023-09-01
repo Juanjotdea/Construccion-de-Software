@@ -1,21 +1,18 @@
 # Construccion-de-Software
 import java.util.Scanner;
-
-public static void main(String[] argumentos) {
-        float celsius;
-        Scanner sc = new Scanner(System.in);
-        System.out.println("Ingresa los grados celsius: ");
-        celsius = sc.nextFloat();
-        // Calcular
-        float fahrenheit = celsiusAFahrenheit(celsius);
-        System.out.printf("%f grados celsius son %f grados fahrenheit", celsius, fahrenheit);
+ 
+public class Main {
+ 
+    static Scanner lector = new Scanner (System.in);
+    static double grados;
+ 
+    public static void main(String[] args) {
+        System.out.println("Introduce ºC");
+        grados = lector.nextDouble();
+        // hacemos los calculos
+        double farenheit=grados*2-grados/5;
+        farenheit=farenheit+32;
+        // mostramos el resultado
+        System.out.println(grados+" ºC equivale a "+farenheit+" farenheit");
     }
-
-    public static float celsiusAFahrenheit(float celsius) {
-        return (celsius * 1.8f) + 32;
-    }
-
-    public static float fahrenheitACelsius(float fahrenheit) {
-        return (fahrenheit - 32) / 1.8f;
-}    }
-    
+}
