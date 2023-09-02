@@ -5,8 +5,7 @@ public class ContarVocalesJava {
         // La cadena a la que le contaremos las vocales
         String cadena = "Mi nombre es Luis Cabrera. Tengo un blog en parzibyte.me/blog y aunque no es mi lenguaje favorito, me gusta Java";
 
-        // Crear e inicializar mapa
-        // Tutorial de mapas: https://parzibyte.me/blog/2020/01/07/hashmap-java-tutorial-ejemplos/
+    
         HashMap<String, Integer> hashMap = new HashMap<>();
         hashMap.put("a", 0);
         hashMap.put("e", 0);
