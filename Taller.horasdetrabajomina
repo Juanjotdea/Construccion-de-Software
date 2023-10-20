@@ -1,0 +1,483 @@
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
+
+/**
+ * This class represents a mine hour log.
+ */
+public class MineHourLog {
+    private List<HourLogEntry> hourLogEntries;
+
+    /**
+     * Constructor to initialize the mine hour log.
+     */
+    public MineHourLog() {
+        hourLogEntries = new ArrayList<>();
+    }
+
+    /**
+     * Adds a new entry to the mine hour log.
+     *
+     * @param entry The entry to be added.
+     */
+    public void addEntry(HourLogEntry entry) {
+        hourLogEntries.add(entry);
+    }
+
+    /**
+     * Retrieves all the entries in the mine hour log.
+     *
+     * @return Returns a list of all the entries in the mine hour log.
+     */
+    public List<HourLogEntry> getEntries() {
+        return hourLogEntries;
+    }
+
+    /**
+     * Main method to interact with the user and manage the mine hour log.
+     *
+     * @param args The command line arguments.
+     */
+    public static void main(String[] args) {
+        MineHourLog mineHourLog = new MineHourLog();
+        Scanner scanner = new Scanner(System.in);
+
+        System.out.println("Welcome to the Mine Hour Log!");
+
+        while (true) {
+            System.out.println("Please select an option:");
+            System.out.println("1. Add new entry");
+            System.out.println("2. View all entries");
+            System.out.println("3. Exit");
+
+            int option = scanner.nextInt();
+            scanner.nextLine(); // Consume the newline character
+
+            switch (option) {
+                case 1:
+                    HourLogEntry entry = createEntry(scanner);
+                    mineHourLog.addEntry(entry);
+                    System.out.println("Entry added successfully!");
+                    break;
+                case 2:
+                    List<HourLogEntry> entries = mineHourLog.getEntries();
+                    if (entries.isEmpty()) {
+                        System.out.println("No entries found.");
+                    } else {
+                        System.out.println("All entries:");
+                        for (HourLogEntry e : entries) {
+                            System.out.println(e);
+                        }
+                    }
+                    break;
+                case 3:
+                    System.out.println("Exiting the Mine Hour Log. Goodbye!");
+                    System.exit(0);
+                default:
+                    System.out.println("Invalid option. Please try again.");
+            }
+        }
+    }
+
+    /**
+     * Creates a new hour log entry based on user input.
+     *
+     * @param scanner The scanner object to read user input.
+     * @return Returns the created hour log entry.
+     */
+    private static HourLogEntry createEntry(Scanner scanner) {
+        System.out.println("Enter the entry details:");
+
+        System.out.print("Ingress hour (HH:mm): ");
+        String ingressHour = scanner.nextLine();
+
+        System.out.print("Egress hour (HH:mm): ");
+        String egressHour = scanner.nextLine();
+
+        System.out.print("Ingress date (dd/MM/yyyy): ");
+        String ingressDate = scanner.nextLine();
+
+        System.out.print("Egress date (dd/MM/yyyy): ");
+        String egressDate = scanner.nextLine();
+
+        System.out.print("Enter any notes or comments: ");
+        String notes = scanner.nextLine();
+
+        System.out.println("Select the type of leave:");
+        System.out.println("1. Licenses");
+        System.out.println("2. Maternity");
+        System.out.println("3. Paternity");
+        System.out.println("4. Incapacity");
+        System.out.println("5. Vacation");
+        System.out.println("6. Permission");
+
+        int leaveType = scanner.nextInt();
+        scanner.nextLine(); // Consume the newline character
+
+        Leave leave;
+        switch (leaveType) {
+            case 1:
+                leave = createLicense(scanner);
+                break;
+            case 2:
+                leave = createMaternity(scanner);
+                break;
+            case 3:
+                leave = createPaternity(scanner);
+                break;
+            case 4:
+                leave = createIncapacity(scanner);
+                break;
+            case 5:
+                leave = createVacation(scanner);
+                break;
+            case 6:
+                leave = createPermission(scanner);
+                break;
+            default:
+                throw new IllegalArgumentException("Invalid leave type.");
+        }
+
+        return new HourLogEntry(ingressHour, egressHour, ingressDate, egressDate, notes, leave);
+    }
+
+    /**
+     * Creates a license leave based on user input.
+     *
+     * @param scanner The scanner object to read user input.
+     * @return Returns the created license leave.
+     */
+    private static License createLicense(Scanner scanner) {
+        System.out.print("Enter the number of days for the license: ");
+        int days = scanner.nextInt();
+        scanner.nextLine(); // Consume the newline character
+
+        if (days > 4) {
+            System.out.print("Enter the number of days for the vacation: ");
+            int vacationDays = scanner.nextInt();
+            scanner.nextLine(); // Consume the newline character
+
+            return new Vacation(days, vacationDays);
+        } else {
+            return new License(days);
+        }
+    }
+
+    /**
+     * Creates a maternity leave based on user input.
+     *
+     * @param scanner The scanner object to read user input.
+     * @return Returns the created maternity leave.
+     */
+    private static Maternity createMaternity(Scanner scanner) {
+        System.out.print("Enter the number of days for the maternity leave: ");
+        int days = scanner.nextInt();
+        scanner.nextLine(); // Consume the newline character
+
+        return new Maternity(days);
+    }
+
+    /**
+     * Creates a paternity leave based on user input.
+     *
+     * @param scanner The scanner object to read user input.
+     * @return Returns the created paternity leave.
+     */
+    private static Paternity createPaternity(Scanner scanner) {
+        System.out.print("Enter the number of days for the paternity leave: ");
+        int days = scanner.nextInt();
+        scanner.nextLine(); // Consume the newline character
+
+        System.out.print("Enter 'Y' if the paternity leave is taken together, 'N' otherwise: ");
+        String takenTogether = scanner.nextLine();
+
+        boolean isTakenTogether = takenTogether.equalsIgnoreCase("Y");
+
+        return new Paternity(days, isTakenTogether);
+    }
+
+    /**
+     * Creates an incapacity leave based on user input.
+     *
+     * @param scanner The scanner object to read user input.
+     * @return Returns the created incapacity leave.
+     */
+    private static Incapacity createIncapacity(Scanner scanner) {
+        System.out.print("Enter the number of days for the incapacity leave: ");
+        int days = scanner.nextInt();
+        scanner.nextLine(); // Consume the newline character
+
+        return new Incapacity(days);
+    }
+
+    /**
+     * Creates a vacation leave based on user input.
+     *
+     * @param scanner The scanner object to read user input.
+     * @return Returns the created vacation leave.
+     */
+    private static Vacation createVacation(Scanner scanner) {
+        System.out.print("Enter the number of days for the vacation: ");
+        int days = scanner.nextInt();
+        scanner.nextLine(); // Consume the newline character
+
+        return new Vacation(days);
+    }
+
+    /**
+     * Creates a permission leave based on user input.
+     *
+     * @param scanner The scanner object to read user input.
+     * @return Returns the created permission leave.
+     */
+    private static Permission createPermission(Scanner scanner) {
+        System.out.print("Enter the number of hours for the permission: ");
+        int hours = scanner.nextInt();
+        scanner.nextLine(); // Consume the newline character
+
+        return new Permission(hours);
+    }
+}
+
+/**
+ * This class represents an hour log entry.
+ */
+class HourLogEntry {
+    private String ingressHour;
+    private String egressHour;
+    private String ingressDate;
+    private String egressDate;
+    private String notes;
+    private Leave leave;
+
+    /**
+     * Constructor to initialize the hour log entry.
+     *
+     * @param ingressHour The ingress hour.
+     * @param egressHour  The egress hour.
+     * @param ingressDate The ingress date.
+     * @param egressDate  The egress date.
+     * @param notes       Any notes or comments.
+     * @param leave       The leave associated with the entry.
+     */
+    public HourLogEntry(String ingressHour, String egressHour, String ingressDate, String egressDate, String notes, Leave leave) {
+        this.ingressHour = ingressHour;
+        this.egressHour = egressHour;
+        this.ingressDate = ingressDate;
+        this.egressDate = egressDate;
+        this.notes = notes;
+        this.leave = leave;
+    }
+
+    /**
+     * Retrieves the ingress hour.
+     *
+     * @return Returns the ingress hour.
+     */
+    public String getIngressHour() {
+        return ingressHour;
+    }
+
+    /**
+     * Retrieves the egress hour.
+     *
+     * @return Returns the egress hour.
+     */
+    public String getEgressHour() {
+        return egressHour;
+    }
+
+    /**
+     * Retrieves the ingress date.
+     *
+     * @return Returns the ingress date.
+     */
+    public String getIngressDate() {
+        return ingressDate;
+    }
+
+    /**
+     * Retrieves the egress date.
+     *
+     * @return Returns the egress date.
+     */
+    public String getEgressDate() {
+        return egressDate;
+    }
+
+    /**
+     * Retrieves the notes or comments.
+     *
+     * @return Returns the notes or comments.
+     */
+    public String getNotes() {
+        return notes;
+    }
+
+    /**
+     * Retrieves the leave associated with the entry.
+     *
+     * @return Returns the leave associated with the entry.
+     */
+    public Leave getLeave() {
+        return leave;
+    }
+
+    /**
+     * Returns a string representation of the hour log entry.
+     *
+     * @return Returns a string representation of the hour log entry.
+     */
+    @Override
+    public String toString() {
+        return "Ingress Hour: " + ingressHour + "\n" +
+                "Egress Hour: " + egressHour + "\n" +
+                "Ingress Date: " + ingressDate + "\n" +
+                "Egress Date: " + egressDate + "\n" +
+                "Notes: " + notes + "\n" +
+                "Leave: " + leave;
+    }
+}
+
+/**
+ * This abstract class represents a leave.
+ */
+abstract class Leave {
+    private int duration;
+
+    /**
+     * Constructor to initialize the leave duration.
+     *
+     * @param duration The duration of the leave.
+     */
+    public Leave(int duration) {
+        this.duration = duration;
+    }
+
+    /**
+     * Retrieves the duration of the leave.
+     *
+     * @return Returns the duration of the leave.
+     */
+    public int getDuration() {
+        return duration;
+    }
+
+    /**
+     * Returns a string representation of the leave.
+     *
+     * @return Returns a string representation of the leave.
+     */
+    @Override
+    public String toString() {
+        return "Duration: " + duration;
+    }
+}
+
+/**
+ * This class represents a license leave.
+ */
+class License extends Leave {
+    /**
+     * Constructor to initialize the license duration.
+     *
+     * @param duration The duration of the license.
+     */
+    public License(int duration) {
+        super(duration);
+    }
+}
+
+/**
+ * This class represents a maternity leave.
+ */
+class Maternity extends Leave {
+    /**
+     * Constructor to initialize the maternity duration.
+     *
+     * @param duration The duration of the maternity leave.
+     */
+    public Maternity(int duration) {
+        super(duration);
+    }
+}
+
+/**
+ * This class represents a paternity leave.
+ */
+class Paternity extendsLeave {
+    private boolean isTakenTogether;
+
+    /**
+     * Constructor to initialize the paternity duration and if it is taken together or not.
+     *
+     * @param duration         The duration of the paternity leave.
+     * @param isTakenTogether  Indicates if the paternity leave is taken together or not.
+     */
+    public Paternity(int duration, boolean isTakenTogether) {
+        super(duration);
+        this.isTakenTogether = isTakenTogether;
+    }
+
+    /**
+     * Retrieves if the paternity leave is taken together or not.
+     *
+     * @return Returns true if the paternity leave is taken together, false otherwise.
+     */
+    public boolean isTakenTogether() {
+        return isTakenTogether;
+    }
+
+    /**
+     * Returns a string representation of the paternity leave.
+     *
+     * @return Returns a string representation of the paternity leave.
+     */
+    @Override
+    public String toString() {
+        return super.toString() + "\n" +
+                "Taken Together: " + isTakenTogether;
+    }
+}
+
+/**
+ * This class represents an incapacity leave.
+ */
+class Incapacity extends Leave {
+    /**
+     * Constructor to initialize the incapacity duration.
+     *
+     * @param duration The duration of the incapacity leave.
+     */
+    public Incapacity(int duration) {
+        super(duration);
+    }
+}
+
+/**
+ * This class represents a vacation leave.
+ */
+class Vacation extends Leave {
+    /**
+     * Constructor to initialize the vacation duration.
+     *
+     * @param duration The duration of the vacation leave.
+     */
+    public Vacation(int duration) {
+        super(duration);
+    }
+}
+
+/**
+ * This class represents a permission leave.
+ */
+class Permission extends Leave {
+    /**
+     * Constructor to initialize the permission duration.
+     *
+     * @param duration The duration of the permission leave.
+     */
+    public Permission(int duration) {
+        super(duration);
+    }
+}
